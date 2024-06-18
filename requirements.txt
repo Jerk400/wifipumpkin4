@@ -18,3 +18,4 @@ beautifulsoup4>=4.9.1
 PyJWT==2.1.0
 Flask-RESTful>=0.3.9
 aiofiles
+urllib3>=2.2.2 # not directly required, pinned by Snyk to avoid a vulnerability
