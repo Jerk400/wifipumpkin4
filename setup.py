@@ -74,7 +74,7 @@ setup(
     data_files=generate_data_files(),
     include_package_data=True,
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     classifiers=[
         "Programming Language :: Python :: 3",
         "Development Status :: 5 - Production/Stable",
@@ -88,6 +88,8 @@ setup(
             "wifipumpkin3=wifipumpkin3.__main__:main",
             "wp3=wifipumpkin3.__main__:main",
             "captiveflask=wifipumpkin3.plugins.bin.captiveflask:main",
+            "phishkin3=wifipumpkin3.plugins.bin.phishkin3:main",
+            "evilqr3=wifipumpkin3.plugins.bin.evilqr3:main",
             "sslstrip3=wifipumpkin3.plugins.bin.sslstrip3:main",
         ],
     },
