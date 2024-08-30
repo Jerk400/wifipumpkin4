@@ -3,10 +3,9 @@ dhcplib==0.1.1
 tabulate>=0.8.5
 urwid==2.1.2
 termcolor>=1.1.0
-twisted>=23.10.0rc1
 PyQt5>=5.14
 PyQt5-sip
-pyOpenSSL==19.0.0
+pyOpenSSL>=22.1.0
 dnslib==0.9.17
 loguru>=0.4.0
 scapy>=2.4.4
@@ -18,4 +17,3 @@ beautifulsoup4>=4.9.1
 PyJWT==2.1.0
 Flask-RESTful>=0.3.9
 aiofiles
-werkzeug>=3.0.1 # not directly required, pinned by Snyk to avoid a vulnerability
