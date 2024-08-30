@@ -9,6 +9,7 @@ from wifipumpkin3.exceptions.errors.dhcpException import (
     DHCPdServerNotFound,
 )
 from wifipumpkin3.core.widgets.default.logger_manager import LoggerManager
+from wifipumpkin3.core.lib.mac_vendor_lookup import MacLookup, BaseMacLookup, VendorNotFoundError
 
 # This file is part of the wifipumpkin3 Open Source Project.
 # wifipumpkin3 is licensed under the Apache 2.0.
@@ -108,6 +109,15 @@ class DHCPServers(QtCore.QObject, ComponentBlueprint):
             return cmdpath
         raise DHCPdServerNotFound("DHCPServer", "The binary (dhcpd) not found")
 
+    def get_mac_vendor(self, mac):
+        """discovery mac vendor by mac address"""
+        BaseMacLookup.cache_path = "{}/config/mac-vendors.txt".format(C.user_config_dir)
+        mac_obj = MacLookup()
+        try:
+            d_vendor = mac_obj.lookup(mac)
+        except VendorNotFoundError:
+            return "unknown vendor"
+        return d_vendor 
 
     def removeInactivityClient(self, mac: str):
         if mac in self._connected:
@@ -116,6 +126,41 @@ class DHCPServers(QtCore.QObject, ComponentBlueprint):
     @property
     def getStaClients(self):
         return self._connected
+
+    def parser_set_dhcpmode(self, status, command):
+        if len(command.split(".")) == 2:
+            try:
+                # command = dhcpmode.pydns_verbose true
+                dhcpmode, key_setting = (
+                    command.split(".")[0],
+                    command.split(".")[1].split()[0],
+                )
+                if key_setting in self.conf.get_all_childname("accesspoint"):
+                    self.conf.set("accesspoint", key_setting, status)
+                else:
+                    print(
+                        display_messages(
+                            "unknown setting: {}".format(key_setting), error=True
+                        )
+                    )
+            except IndexError:
+                print(display_messages("unknown sintax command", error=True))
+        else:
+            try:
+                id_dhcp = command.split()[1]
+                if not id_dhcp in self.parent.dhcp_controller.getInfo().keys():
+                    print(
+                        display_messages(
+                            "the parameter id {} was not found.".format(
+                                setcolor(id_dhcp, color="red")
+                            ),
+                            error=True,
+                        )
+                    )
+                    return
+                self.parent.dhcp_controller.setDhcpMode(id_dhcp)
+            except IndexError:
+                print(display_messages("unknown sintax command", error=True))
 
 class DHCPSettings(CoreSettings):
     Name = "WP DHCP"
